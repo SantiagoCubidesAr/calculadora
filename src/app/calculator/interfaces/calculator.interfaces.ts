@@ -1,5 +1,4 @@
-export interface Calculator {
-  number: number;
-  operator: string;
-  resultado: number;
+export interface Tecla {
+  tipo: string,
+  valor: string
 }
