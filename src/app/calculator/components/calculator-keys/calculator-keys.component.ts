@@ -1,26 +1,24 @@
-import { Component } from '@angular/core';
-import { Tecla } from '../../interfaces/calculator.interfaces';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'calculator-keys',
+  selector: 'app-calculator-keys',
   templateUrl: './calculator-keys.component.html',
-  styleUrl: './calculator-keys.component.css'
+  styleUrls: ['./calculator-keys.component.css'],
 })
 export class CalculatorKeysComponent {
-  public teclas: Tecla[] = [
-    { tipo: 'numero', valor: '1'},
-    { tipo: 'numero', valor: '2'},
-    { tipo: 'numero', valor: '3'},
-    { tipo: 'numero', valor: '4'},
-    { tipo: 'numero', valor: '5'},
-    { tipo: 'numero', valor: '6'},
-    { tipo: 'numero', valor: '7'},
-    { tipo: 'numero', valor: '8'},
-    { tipo: 'numero', valor: '9'},
-    { tipo: 'numero', valor: '0'},
-    { tipo: 'operador', valor: '+'},
-    { tipo: 'operador', valor: '_'},
-    { tipo: 'operador', valor: '/'},
-    { tipo: 'operador', valor: '*'},
-  ]
+  @Output() keyPressed = new EventEmitter<string>();
+  @Output() clearPressed = new EventEmitter<void>();
+  @Output() calculatePressed = new EventEmitter<void>();
+
+  sendKey(value: string): void {
+    this.keyPressed.emit(value);
+  }
+
+  clear(): void {
+    this.clearPressed.emit();
+  }
+
+  calculate(): void {
+    this.calculatePressed.emit();
+  }
 }
