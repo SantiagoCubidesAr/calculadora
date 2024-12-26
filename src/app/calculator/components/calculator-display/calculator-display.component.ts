@@ -7,4 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class CalculatorDisplayComponent {
   @Input() display: string = '';
+  @Input() result: string = ''; 
 }
