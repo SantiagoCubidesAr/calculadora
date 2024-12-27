@@ -1,8 +1,12 @@
 <div class="calculator">
-  <app-calculator-display [display]="display"></app-calculator-display>
+  <app-calculator-display 
+    [display]="display" 
+    [result]="result">
+  </app-calculator-display>
   <app-calculator-keys
     (keyPressed)="displayValue($event)"
     (clearPressed)="clear()"
     (calculatePressed)="calculate()"
-  ></app-calculator-keys>
+    (deleteLastPressed)="deleteCharacter()">
+  </app-calculator-keys>
 </div>
