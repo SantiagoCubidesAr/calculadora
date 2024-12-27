@@ -1,4 +1,12 @@
 <div class="display">
-    <div class="operations">{{ display }}</div>
-    <div class="result">{{ result }}</div>
+  <div
+    class="operations"
+    [ngClass]="{ 'highlight': !isResultDisplayed }">
+    {{ display || 0}}
   </div>
+  <div
+    class="result"
+    [ngClass]="{ 'highlight': isResultDisplayed }">
+    {{ result }}
+  </div>
+</div>

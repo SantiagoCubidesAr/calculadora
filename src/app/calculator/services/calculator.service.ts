@@ -12,7 +12,7 @@ export class CalculatorService {
     if (!/^[\d+\-*/.() ]+$/.test(expression)) {
       throw new Error('Expresión no válida');
     }
-    
+
     if (/\/0(?!\d)/.test(expression)) {
       throw new Error('División por cero no permitida');
     }

@@ -18,8 +18,9 @@
   color: #666;
 }
 
-.result {
-  font-size: 24px;
+
+.highlight {
+  font-size: 30px;
   font-weight: bold;
   color: #000;
 }
