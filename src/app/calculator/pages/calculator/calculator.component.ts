@@ -22,7 +22,7 @@ export class CalculatorComponent {
 
   calculate(): void {
     try {
-      const [a, operator, b] = this.parseInput(this.display);
+      const [a, operator, b] = this.validation(this.display);
       const Result = this.calculatorService.Operation(a, b, operator);
 
       if (typeof Result === 'number') {
@@ -37,12 +37,12 @@ export class CalculatorComponent {
     }
   }
 
-  parseInput(input: string): [number, string, number] {
-    const match = input.match(/(\d+\.?\d*)([+\-*/])(\d+\.?\d*)/);
-    if (!match) {
-      throw new Error('Invalid input format');
+  validation(input: string): [number, string, number] {
+    const converter = input.match(/(\d+\.?\d*)([+\-*/])(\d+\.?\d*)/);
+    if (!converter) {
+      throw new Error('Formato Invalido');
     }
-    const [, num1, operator, num2] = match;
+    const [, num1, operator, num2] =converter;
     return [parseFloat(num1), operator, parseFloat(num2)];
   }
 }
