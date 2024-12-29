@@ -1,5 +1,4 @@
 .display {
-  font-size: 24px;
   height: 80px;
   margin-bottom: 20px;
   border: 2px solid #ccc;
@@ -11,16 +10,16 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 }
 
-.operations {
-  font-size: 18px;
-  color: #666;
+.operations, .result {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
 
 .highlight {
-  font-size: 30px;
   font-weight: bold;
   color: #000;
 }

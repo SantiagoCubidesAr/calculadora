@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class CalculatorService {
+
   roundDecimals(value: number): number {
     return parseFloat(value.toFixed(2));
   }
@@ -12,9 +13,17 @@ export class CalculatorService {
     if (!/^[\d+\-*/.() ]+$/.test(expression)) {
       throw new Error('Expresión no válida');
     }
-
+  
     if (/\/0(?!\d)/.test(expression)) {
       throw new Error('División por cero no permitida');
+    }
+  
+    if (/^[+\-*/]/.test(expression)) {
+      throw new Error('La expresión no puede comenzar con un operador');
+    }
+  
+    if (/[\+\-\*\/]$/.test(expression)) {
+      throw new Error('La expresión no puede terminar con un operador');
     }
   }
 

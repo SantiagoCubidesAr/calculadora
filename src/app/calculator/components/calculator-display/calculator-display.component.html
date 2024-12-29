@@ -1,11 +1,13 @@
 <div class="display">
   <div
     class="operations"
+    [ngStyle]="{ fontSize: getDynamicFontSize(display) }"
     [ngClass]="{ 'highlight': !isResultDisplayed }">
-    {{ display || 0}}
+    {{ display || 0 }}
   </div>
   <div
     class="result"
+    [ngStyle]="{ fontSize: getDynamicFontSize(result) }"
     [ngClass]="{ 'highlight': isResultDisplayed }">
     {{ result }}
   </div>

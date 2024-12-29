@@ -15,14 +15,25 @@ export class CalculatorComponent {
 
   displayValue(value: string): void {
     if (this.isResultDisplayed) {
-      this.display = this.result + value;
+      try {
+        this.calculatorService.validateExpression(this.result);
+        this.display = value === '.' ? '0.' : value;
+        this.display = this.result + value;
+      } catch {
+        this.display += value;
+      }
       this.isResultDisplayed = false;
     } else {
-      this.display = this.display === '0' ? value : this.display + value;
+      if (this.display === '0' && value === '.') {
+        this.display = '0.';
+      } else if (this.display === '0') {
+        this.display = value;
+      } else {
+        this.display += value;
+      }
     }
     this.updateResult();
   }
-
 
   clear(): void {
     this.display = '';
@@ -43,18 +54,17 @@ export class CalculatorComponent {
     try {
       this.updateResult();
       this.display = this.result;
+      this.isResultDisplayed = true;
     } catch (error: any) {
       this.result = error.message;
+      this.isResultDisplayed = true;
     }
-      this.isResultDisplayed = true;
-      this.isResultDisplayed = true;
   }
 
   private updateResult(): void {
       const sanitizedExpression = this.removeZeros(this.display);
       const calculationResult = this.calculatorService.calculateExpression(sanitizedExpression);
       this.result = calculationResult.toString();
-
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -73,14 +83,5 @@ export class CalculatorComponent {
     } else if (event.key === 'Escape') {
       this.clear();
     }
-  }
-
-  validation(input: string): [number, string, number] {
-    const converter = input.match(/(\d+\.?\d*)([+\-*/])(\d+\.?\d*)/);
-    if (!converter) {
-      throw new Error('Formato Invalido');
-    }
-    const [, num1, operator, num2] = converter;
-    return [parseFloat(num1), operator, parseFloat(num2)];
   }
 }
