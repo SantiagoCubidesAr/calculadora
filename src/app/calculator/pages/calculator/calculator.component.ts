@@ -9,12 +9,12 @@ import { CalculatorService } from '../../services/calculator.service';
 export class CalculatorComponent {
   display: string = '';
   result: string = '';
-  isResultDisplayed: boolean = false;
+  isResult: boolean = false;
 
   constructor(private calculatorService: CalculatorService) {}
 
   displayValue(value: string): void {
-    if (this.isResultDisplayed) {
+    if (this.isResult) {
       try {
         this.calculatorService.validateExpression(this.result);
         this.display = value === '.' ? '0.' : value;
@@ -22,7 +22,7 @@ export class CalculatorComponent {
       } catch {
         this.display += value;
       }
-      this.isResultDisplayed = false;
+      this.isResult = false;
     } else {
       if (this.display === '0' && value === '.') {
         this.display = '0.';
@@ -38,7 +38,7 @@ export class CalculatorComponent {
   clear(): void {
     this.display = '';
     this.result = '';
-    this.isResultDisplayed = false;
+    this.isResult = false;
   }
 
   deleteCharacter(): void {
@@ -50,20 +50,20 @@ export class CalculatorComponent {
     return expression.replace(/\b0+(\d+)/g, '$1');
   }
 
-  calculate(): void {
+  finalResult(): void {
     try {
       this.updateResult();
       this.display = this.result;
-      this.isResultDisplayed = true;
+      this.isResult = true;
     } catch (error: any) {
       this.result = error.message;
-      this.isResultDisplayed = true;
+      this.isResult = true;
     }
   }
 
   private updateResult(): void {
-      const sanitizedExpression = this.removeZeros(this.display);
-      const calculationResult = this.calculatorService.calculateExpression(sanitizedExpression);
+      const Expression = this.removeZeros(this.display);
+      const calculationResult = this.calculatorService.calculateExpression(Expression);
       this.result = calculationResult.toString();
   }
 
@@ -72,14 +72,14 @@ export class CalculatorComponent {
     const validKeys = '0123456789+-*/.=()';
     if (validKeys.includes(event.key)) {
       if (event.key === '=') {
-        this.calculate();
+        this.finalResult();
       } else {
         this.displayValue(event.key);
       }
     } else if (event.key === 'Backspace') {
       this.deleteCharacter();
     } else if (event.key === 'Enter') {
-      this.calculate();
+      this.finalResult();
     } else if (event.key === 'Escape') {
       this.clear();
     }

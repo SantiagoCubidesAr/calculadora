@@ -10,7 +10,7 @@ export class CalculatorDisplayComponent {
   @Input() result: string = '';
   @Input() isResultDisplayed: boolean = false;
 
-  getDynamicFontSize(text: string): string {
+  FontSize(text: string): string {
     const baseSize = 24; 
     const maxLength = 15; 
     const minSize = 12; 

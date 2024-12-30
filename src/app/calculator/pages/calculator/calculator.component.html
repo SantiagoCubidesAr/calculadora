@@ -2,12 +2,12 @@
   <app-calculator-display
     [display]="display"
     [result]="result"
-    [isResultDisplayed]="isResultDisplayed">
+    [isResultDisplayed]="isResult">
   </app-calculator-display>
   <app-calculator-keys
     (keyPressed)="displayValue($event)"
     (clearPressed)="clear()"
-    (calculatePressed)="calculate()"
+    (calculatePressed)="finalResult()"
     (deleteLastPressed)="deleteCharacter()">
   </app-calculator-keys>
 </div>
