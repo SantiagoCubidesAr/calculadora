@@ -7,3 +7,21 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   background-color: #f9f9f9;
 }
+
+.button {
+  display: flex;
+  justify-content: center;
+  button{
+    width: 25%;
+    height: 30px;
+    font-size: 14px;
+    border: none;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+

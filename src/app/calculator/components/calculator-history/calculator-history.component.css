@@ -1,0 +1,38 @@
+.history-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.history-content {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 80%;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.history-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.history-content li {
+  margin: 10px 0;
+}
+
+.close-btn, .clear-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}

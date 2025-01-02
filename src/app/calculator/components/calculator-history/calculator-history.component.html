@@ -1,0 +1,10 @@
+<div class="history-overlay">
+  <div class="history-content">
+    <button class="close-btn" (click)="onCloseHistory()">Cerrar</button>
+    <ul>
+      <li *ngFor="let entry of history" (click)="itemSelected(entry)">{{ entry }}</li>
+    </ul>
+    <button class="clear-btn" (click)="onClearHistory()">Limpiar</button>
+  </div>
+</div>
+

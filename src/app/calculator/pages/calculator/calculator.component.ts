@@ -10,8 +10,29 @@ export class CalculatorComponent {
   display: string = '';
   result: string = '';
   isResult: boolean = false;
+  history: string[] = [];
+  showHistory: boolean = false;
 
-  constructor(private calculatorService: CalculatorService) {}
+  constructor(private calculatorService: CalculatorService) {
+    this.loadHistory();
+  }
+
+  toggleHistory(): void {
+    this.showHistory = !this.showHistory;
+  }
+
+  clearHistory(): void {
+    this.calculatorService.clearHistory();
+    this.history = [];
+  }
+
+  closeHistory(): void {
+    this.showHistory = false;
+  }
+
+  loadHistory(): void {
+    this.history = this.calculatorService.getHistory();
+  }
 
   displayValue(value: string): void {
     if (this.isResult) {
@@ -53,6 +74,9 @@ export class CalculatorComponent {
   finalResult(): void {
     try {
       this.updateResult();
+      const operation = `${this.display} = ${this.result}`;
+      this.calculatorService.saveToHistory(operation);
+      this.history.push(operation);
       this.display = this.result;
       this.isResult = true;
     } catch (error: any) {

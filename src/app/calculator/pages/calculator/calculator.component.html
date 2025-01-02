@@ -1,14 +1,16 @@
 <div class="calculator">
-  <app-calculator-display
-    [display]="display"
-    [result]="result"
-    [isResultDisplayed]="isResult">
+  <app-calculator-display [display]="display" [result]="result" [isResultDisplayed]="isResult">
   </app-calculator-display>
-  <app-calculator-keys
-    (keyPressed)="displayValue($event)"
-    (clearPressed)="clear()"
-    (calculatePressed)="finalResult()"
+
+  <div class="button">
+    <button (click)="toggleHistory()">Historico</button>
+  </div>
+
+  <app-calculator-keys (keyPressed)="displayValue($event)" (clearPressed)="clear()" (calculatePressed)="finalResult()"
     (deleteLastPressed)="deleteCharacter()">
   </app-calculator-keys>
-</div>
 
+  <app-calculator-history *ngIf="showHistory" [history]="history" (clearHistory)="clearHistory()"
+    (closeHistory)="closeHistory()">
+  </app-calculator-history>
+</div>
