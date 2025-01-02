@@ -11,18 +11,18 @@ export class CalculatorDisplayComponent {
   @Input() isResultDisplayed: boolean = false;
 
   FontSize(text: string): string {
-    const baseSize = 24; 
-    const maxLength = 15; 
-    const minSize = 12; 
-    const scaleFactor = 1; 
+    const baseSize = 24;
+    const maxLength = 15;
+    const minSize = 12;
+    const scaleFactor = 1;
 
     const newSize =
       text.length > maxLength
         ? Math.max(baseSize - (text.length - maxLength) * scaleFactor, minSize)
         : baseSize;
-  
+
     return `${newSize}px`;
   }
-  
-  
+
+
 }
