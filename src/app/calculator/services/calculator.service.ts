@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,7 +21,7 @@ export class CalculatorService {
       throw new Error('División por cero no permitida');
     }
 
-    if (/^[+\-*/]/.test(expression)) {
+    if (/^[*\/]/.test(expression)) {
       throw new Error('La expresión no puede comenzar con un operador');
     }
 
@@ -30,12 +31,17 @@ export class CalculatorService {
   }
 
   calculateExpression(expression: string): number {
-    this.validateExpression(expression);
-    const result = eval(expression);
+    const processedExpression = this.addImplicitMultiplication(expression);
+    this.validateExpression(processedExpression);
+    const result = eval(processedExpression);
     if (!isFinite(result)) {
       throw new Error('Resultado infinito o no válido');
     }
     return this.roundDecimals(result);
+  }
+
+  private addImplicitMultiplication(expression: string): string {
+    return expression.replace(/(\d)(\()/g, '$1*(');
   }
 
   saveToHistory(operation: string): void {

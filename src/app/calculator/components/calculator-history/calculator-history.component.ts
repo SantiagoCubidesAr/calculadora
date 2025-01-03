@@ -10,17 +10,14 @@ export class CalculatorHistoryComponent {
   @Input() history: string[] = [];
   @Output() clearHistory = new EventEmitter<void>();
   @Output() closeHistory = new EventEmitter<void>();
+  @Output() selectHistoryItem = new EventEmitter<string>();
 
   onClearHistory(): void {
     this.clearHistory.emit();
   }
 
-  onCloseHistory(): void {
-    this.closeHistory.emit();
-  }
-: 
-  itemSelected(entry) {
-
+  itemSelected(entry: string) {
+    this.selectHistoryItem.emit(entry);
   }
 
 }

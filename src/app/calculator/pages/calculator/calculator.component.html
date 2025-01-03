@@ -3,14 +3,14 @@
   </app-calculator-display>
 
   <div class="button">
-    <button (click)="toggleHistory()">Historico</button>
+    <button (click)="toggleHistory()">{{ showHistory ? 'Calculadora' : 'Historico'}}</button>
   </div>
 
-  <app-calculator-keys (keyPressed)="displayValue($event)" (clearPressed)="clear()" (calculatePressed)="finalResult()"
+  <app-calculator-keys *ngIf="!showHistory" (keyPressed)="displayValue($event)" (clearPressed)="clear()" (calculatePressed)="finalResult()"
     (deleteLastPressed)="deleteCharacter()">
   </app-calculator-keys>
 
   <app-calculator-history *ngIf="showHistory" [history]="history" (clearHistory)="clearHistory()"
-    (closeHistory)="closeHistory()">
+    (selectHistoryItem)="selectHistoryItem($event)">
   </app-calculator-history>
 </div>

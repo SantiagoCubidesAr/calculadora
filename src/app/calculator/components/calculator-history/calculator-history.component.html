@@ -1,10 +1,8 @@
-<div class="history-overlay">
-  <div class="history-content">
-    <button class="close-btn" (click)="onCloseHistory()">Cerrar</button>
-    <ul>
-      <li *ngFor="let entry of history" (click)="itemSelected(entry)">{{ entry }}</li>
-    </ul>
-    <button class="clear-btn" (click)="onClearHistory()">Limpiar</button>
+<div class="history">
+  <div class="history-overlay">
+    <div class="list" *ngFor="let entry of history" (click)="itemSelected(entry)">
+      <p>{{ entry }}</p>
+    </div>
   </div>
+  <button class="clear-btn" (click)="onClearHistory()"><img src="assets/images/basura.svg" alt="basura"></button>
 </div>
-

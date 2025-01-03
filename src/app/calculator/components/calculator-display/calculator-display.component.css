@@ -13,12 +13,6 @@
   overflow: hidden;
 }
 
-.operations, .result {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .highlight {
   font-weight: bold;
   color: #000;

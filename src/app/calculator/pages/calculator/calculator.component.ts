@@ -26,10 +26,6 @@ export class CalculatorComponent {
     this.history = [];
   }
 
-  closeHistory(): void {
-    this.showHistory = false;
-  }
-
   loadHistory(): void {
     this.history = this.calculatorService.getHistory();
   }
@@ -89,6 +85,13 @@ export class CalculatorComponent {
       const Expression = this.removeZeros(this.display);
       const calculationResult = this.calculatorService.calculateExpression(Expression);
       this.result = calculationResult.toString();
+  }
+
+  selectHistoryItem(item: string): void {
+    const [expression] = item.split(' = ');
+    this.display = expression;
+    this.isResult = false;
+    this.updateResult();
   }
 
   @HostListener('window:keydown', ['$event'])
