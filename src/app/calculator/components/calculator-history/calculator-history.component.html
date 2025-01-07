@@ -1,8 +1,8 @@
 <div class="history">
   <div class="history-overlay">
-    <div class="list" *ngFor="let entry of history" (click)="itemSelected(entry)">
-      <p>{{ entry }}</p>
+    <div class="list" *ngFor="let entry of history">
+      <p (click)="itemSelected(entry)">{{ entry }}</p><span><img src="assets/images/trashWhite.svg" alt="basura" (click)="onClearItem(entry)"></span>
     </div>
   </div>
-  <img src="assets/images/basura.svg" alt="basura" (click)="onClearHistory()">
+  <img src="assets/images/trashBlack.svg" alt="basura" (click)="onClearHistory()">
 </div>

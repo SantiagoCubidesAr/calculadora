@@ -11,6 +11,7 @@ export class CalculatorHistoryComponent {
   @Output() clearHistory = new EventEmitter<void>();
   @Output() closeHistory = new EventEmitter<void>();
   @Output() selectHistoryItem = new EventEmitter<string>();
+  @Output() ItemClear= new EventEmitter<string>();
 
   onClearHistory(): void {
     this.clearHistory.emit();
@@ -20,4 +21,7 @@ export class CalculatorHistoryComponent {
     this.selectHistoryItem.emit(entry);
   }
 
+  onClearItem(item: string) {
+    this.ItemClear.emit(item);
+  }
 }

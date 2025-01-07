@@ -13,6 +13,7 @@ export class CalculatorService {
   }
 
   validateExpression(expression: string): void {
+
     if (!/^[\d+\-*/.() ]+$/.test(expression)) {
       throw new Error('Expresión no válida');
     }

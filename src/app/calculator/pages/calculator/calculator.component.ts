@@ -7,6 +7,7 @@ import { CalculatorService } from '../../services/calculator.service';
   styleUrls: ['./calculator.component.css'],
 })
 export class CalculatorComponent {
+
   display: string = '';
   result: string = '';
   isResult: boolean = false;
@@ -41,6 +42,20 @@ export class CalculatorComponent {
       }
       this.isResult = false;
     } else {
+      if (value === '.') {
+        const currentNumber = this.display.split(/[-+*/()]+/).pop();
+        if (currentNumber && currentNumber.includes('.')) {
+          return;
+        }
+      }
+      if (value === '+' || value === '-') {
+        if (this.display && (this.display.charAt(this.display.length - 1) === '+' || this.display.charAt(this.display.length - 1) === '-')) {
+          return;
+        }
+      }
+      if (this.display.length === 0 && (value === '*' || value === '/') ) {
+          this.display = ' ';
+      }
       if (this.display === '0' && value === '.') {
         this.display = '0.';
       } else if (this.display === '0') {
@@ -92,6 +107,13 @@ export class CalculatorComponent {
     this.display = expression;
     this.isResult = false;
     this.updateResult();
+  }
+
+  ItemClear(item: string) {
+    const index = this.history.indexOf(item);
+    if (index !== -1) {
+      this.history.splice(index, 1);
+    }
   }
 
   @HostListener('window:keydown', ['$event'])
