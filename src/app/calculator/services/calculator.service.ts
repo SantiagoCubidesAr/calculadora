@@ -22,10 +22,6 @@ export class CalculatorService {
       throw new Error('División por cero no permitida');
     }
 
-    if (/^[*\/]/.test(expression)) {
-      throw new Error('La expresión no puede comenzar con un operador');
-    }
-
     if (/[\+\-\*\/]$/.test(expression)) {
       throw new Error('La expresión no puede terminar con un operador');
     }
@@ -34,11 +30,15 @@ export class CalculatorService {
   calculateExpression(expression: string): number {
     const processedExpression = this.addImplicitMultiplication(expression);
     this.validateExpression(processedExpression);
-    const result = eval(processedExpression);
-    if (!isFinite(result)) {
-      throw new Error('Resultado infinito o no válido');
+    try{
+      const result = eval(processedExpression);
+      if (!isFinite(result)) {
+        throw new Error('Resultado infinito o no válido');
+      }
+      return this.roundDecimals(result);
+    } catch{
+      throw new Error('Expresión no válida');
     }
-    return this.roundDecimals(result);
   }
 
   private addImplicitMultiplication(expression: string): string {

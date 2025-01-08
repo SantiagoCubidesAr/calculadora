@@ -19,11 +19,12 @@
 
     .list {
       display: flex;
+
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
       padding: 10px;
-      max-height: 25px;
+      border-radius: 5px;
 
       img {
         max-width: 18px;
@@ -38,12 +39,14 @@
 
       p {
         font-size: 18px;
+        max-width: 250px;
+        word-wrap: break-word;
       }
     }
 
-    .list:hover{
-        background-color:  #007bff;
-        color: white;
+    .list:hover {
+      background-color: #007bff;
+      color: white;
     }
   }
 

@@ -48,20 +48,22 @@ export class CalculatorComponent {
           return;
         }
       }
-      if (value === '+' || value === '-') {
-        if (this.display && (this.display.charAt(this.display.length - 1) === '+' || this.display.charAt(this.display.length - 1) === '-')) {
-          return;
+      if ((value === '*' || value === '/') && this.display.length === 0) {
+        return;
+      } else if (value === '+' || value === '-' || value === '*' || value === '/') {
+        if (this.display && (this.display.charAt(this.display.length - 1) === '+' || this.display.charAt(this.display.length - 1) === '-' || this.display.charAt(this.display.length - 1) === '*' || this.display.charAt(this.display.length - 1) === '/')) {
+          this.display = this.display.slice(0, -1) + value;
+        } else {
+          this.display += value;
         }
-      }
-      if (this.display.length === 0 && (value === '*' || value === '/') ) {
-          this.display = ' ';
-      }
-      if (this.display === '0' && value === '.') {
-        this.display = '0.';
-      } else if (this.display === '0') {
-        this.display = value;
       } else {
-        this.display += value;
+        if (this.display === '0' && value === '.') {
+          this.display = '0.';
+        } else if (this.display === '0') {
+          this.display = value;
+        } else {
+          this.display += value;
+        }
       }
     }
     this.updateResult();

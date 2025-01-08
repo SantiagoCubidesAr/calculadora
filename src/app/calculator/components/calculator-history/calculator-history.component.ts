@@ -24,4 +24,19 @@ export class CalculatorHistoryComponent {
   onClearItem(item: string) {
     this.ItemClear.emit(item);
   }
+
+  Height(text: string): string {
+
+    console.log(text.length);
+    const baseHeight = 25;
+    const maxLength = 30;
+    const scaleFactor = 1;
+
+    const newHeight =
+      text.length > maxLength
+        ? Math.max(baseHeight - (text.length - maxLength) * scaleFactor)
+        : baseHeight;
+
+    return `${newHeight}px`;
+  }
 }
