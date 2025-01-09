@@ -1,11 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-calculator-display',
   templateUrl: './calculator-display.component.html',
   styleUrls: ['./calculator-display.component.css'],
 })
-export class CalculatorDisplayComponent {
+export class CalculatorDisplayComponent implements AfterViewChecked{
+
+  @ViewChild('operations') operationsDiv!: ElementRef;
   @Input() display: string = '';
   @Input() result: string = '';
   @Input() isResultDisplayed: boolean = false;
@@ -22,6 +24,15 @@ export class CalculatorDisplayComponent {
         : baseSize;
 
     return `${newSize}px`;
+  }
+
+  scrollToBottom(): void {
+    const element = this.operationsDiv.nativeElement;
+    element.scrollTop = element.scrollHeight;
+  }
+
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
   }
 
 

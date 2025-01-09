@@ -27,45 +27,49 @@ export class CalculatorComponent {
     this.history = [];
   }
 
-  loadHistory(): void {
+  private loadHistory(): void {
     this.history = this.calculatorService.getHistory();
   }
 
   displayValue(value: string): void {
     if (this.isResult) {
-      try {
-        this.calculatorService.validateExpression(this.result);
-        this.display = value === '.' ? '0.' : value;
-        this.display = this.result + value;
-      } catch {
-        this.display += value;
-      }
-      this.isResult = false;
-    } else {
-      if (value === '.') {
-        const currentNumber = this.display.split(/[-+*/()]+/).pop();
-        if (currentNumber && currentNumber.includes('.')) {
-          return;
-        }
-      }
-      if ((value === '*' || value === '/') && this.display.length === 0) {
-        return;
-      } else if (value === '+' || value === '-' || value === '*' || value === '/') {
-        if (this.display && (this.display.charAt(this.display.length - 1) === '+' || this.display.charAt(this.display.length - 1) === '-' || this.display.charAt(this.display.length - 1) === '*' || this.display.charAt(this.display.length - 1) === '/')) {
-          this.display = this.display.slice(0, -1) + value;
-        } else {
-          this.display += value;
-        }
+      if (isNaN(Number(this.result))) {
+        this.isResult = false;
       } else {
-        if (this.display === '0' && value === '.') {
-          this.display = '0.';
-        } else if (this.display === '0') {
-          this.display = value;
-        } else {
-          this.display += value;
+        this.display = this.result;
+        this.isResult = false;
+        if(!isNaN(Number(value))){
+          this.display = '';
         }
       }
     }
+    if (this.isInvalidSequence(value)) {
+      return;
+    }
+    this.updateDisplay(this.display + value);
+  }
+
+  private isInvalidSequence(value: string): boolean {
+    if (value === '.') {
+      const currentNumber = this.display.split(/[-+*/()]+/).pop();
+      return currentNumber?.includes('.') ?? false;
+    }
+    if ((value === '*' || value === '/') && this.display.length === 0) {
+      return true;
+    }
+    if (['+', '-', '*', '/'].includes(value) && this.isLastCharacterOperator()) {
+      this.display = this.display.slice(0, -1) + value; // Sustituye el operador actual.
+      return true;
+    }
+    return false;
+  }
+
+  private isLastCharacterOperator(): boolean {
+    return /[\+\-\*\/]$/.test(this.display);
+  }
+
+  private updateDisplay(value: string): void {
+    this.display = value;
     this.updateResult();
   }
 
@@ -76,8 +80,7 @@ export class CalculatorComponent {
   }
 
   deleteCharacter(): void {
-    this.display = this.display.length > 1 ? this.display.slice(0, -1) : '0';
-    this.updateResult();
+    this.updateDisplay(this.display.length > 1 ? this.display.slice(0, -1) : '0');
   }
 
   private removeZeros(expression: string): string {
@@ -86,11 +89,11 @@ export class CalculatorComponent {
 
   finalResult(): void {
     try {
-      this.updateResult();
-      const operation = `${this.display} = ${this.result}`;
-      this.calculatorService.saveToHistory(operation);
-      this.history.push(operation);
-      this.display = this.result;
+      const expression = this.removeZeros(this.display);
+      const calculationResult = this.calculatorService.calculateExpression(expression);
+      const operation = `${this.display} = ${calculationResult}`;
+      this.saveOperation(operation);
+      this.updateDisplay(calculationResult.toString());
       this.isResult = true;
     } catch (error: any) {
       this.result = error.message;
@@ -99,19 +102,23 @@ export class CalculatorComponent {
   }
 
   private updateResult(): void {
-      const Expression = this.removeZeros(this.display);
-      const calculationResult = this.calculatorService.calculateExpression(Expression);
-      this.result = calculationResult.toString();
+    const expression = this.removeZeros(this.display);
+    const calculationResult = this.calculatorService.calculateExpression(expression);
+    this.result = calculationResult.toString();
+  }
+
+  private saveOperation(operation: string): void {
+    this.calculatorService.saveToHistory(operation);
+    this.history.push(operation);
   }
 
   selectHistoryItem(item: string): void {
     const [expression] = item.split(' = ');
-    this.display = expression;
+    this.updateDisplay(expression);
     this.isResult = false;
-    this.updateResult();
   }
 
-  ItemClear(item: string) {
+  clearHistoryItem(item: string): void {
     const index = this.history.indexOf(item);
     if (index !== -1) {
       this.history.splice(index, 1);

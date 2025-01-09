@@ -9,8 +9,8 @@
   <app-calculator-keys *ngIf="!showHistory; " (keyPressed)="displayValue($event)" (clearPressed)="clear()" (calculatePressed)="finalResult()"
     (deleteLastPressed)="deleteCharacter()">
   </app-calculator-keys>
-  
+
   <app-calculator-history *ngIf="showHistory" [history]="history" (clearHistory)="clearHistory()"
-    (selectHistoryItem)="selectHistoryItem($event)" (ItemClear)="ItemClear($event)">
+    (selectHistoryItem)="selectHistoryItem($event)" (ItemClear)="clearHistoryItem($event)">
   </app-calculator-history>
 </div>

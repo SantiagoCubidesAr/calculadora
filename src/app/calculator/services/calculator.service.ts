@@ -7,18 +7,15 @@ import { Injectable } from '@angular/core';
 export class CalculatorService {
 
   private readonly historyKey = 'calculator_history';
+  private storage: Storage = localStorage;
 
-  roundDecimals(value: number): number {
-    return parseFloat(value.toFixed(2));
-  }
-
-  validateExpression(expression: string): void {
+  private validateExpression(expression: string): void {
 
     if (!/^[\d+\-*/.() ]+$/.test(expression)) {
       throw new Error('Expresión no válida');
     }
 
-    if (/\/0(?!\d)/.test(expression)) {
+    if (/\/0(?!\.|\d)/.test(expression)) {
       throw new Error('División por cero no permitida');
     }
 
@@ -27,36 +24,53 @@ export class CalculatorService {
     }
   }
 
-  calculateExpression(expression: string): number {
+  private addImplicitMultiplication(expression: string): string {
+    return expression
+    .replace(/(\d)(\()/g, '$1*(')
+    .replace(/(\))(\d|\.)/g, '$1*$2')
+    .replace(/(\.)(\()/g, '$1*$2')
+  }
+
+  processAndValidate(expression: string): string {
     const processedExpression = this.addImplicitMultiplication(expression);
     this.validateExpression(processedExpression);
-    try{
+    return processedExpression;
+  }
+
+  roundDecimals(value: number): number {
+    return parseFloat(value.toFixed(2));
+  }
+
+  calculateExpression(expression: string): number {
+    const processedExpression = this.processAndValidate(expression)
+    try {
+      console.log(processedExpression);
       const result = eval(processedExpression);
       if (!isFinite(result)) {
         throw new Error('Resultado infinito o no válido');
       }
       return this.roundDecimals(result);
-    } catch{
+    } catch (error) {
       throw new Error('Expresión no válida');
     }
-  }
-
-  private addImplicitMultiplication(expression: string): string {
-    return expression.replace(/(\d)(\()/g, '$1*(');
   }
 
   saveToHistory(operation: string): void {
     const history = this.getHistory();
     history.push(operation);
-    localStorage.setItem(this.historyKey, JSON.stringify(history));
+    this.storage.setItem(this.historyKey, JSON.stringify(history));
   }
 
   getHistory(): string[] {
-    const history = localStorage.getItem(this.historyKey);
+    const history = this.storage.getItem(this.historyKey);
     return history ? JSON.parse(history) : [];
   }
 
   clearHistory(): void {
-    localStorage.removeItem(this.historyKey);
+    this.storage.removeItem(this.historyKey);
+  }
+
+  setStorageEngine(storage: Storage): void {
+    this.storage = storage;
   }
 }
