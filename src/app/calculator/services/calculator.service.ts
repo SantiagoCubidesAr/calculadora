@@ -11,7 +11,7 @@ export class CalculatorService {
 
   private validateExpression(expression: string): void {
 
-    if (!/^[\d+\-*/.() ]+$/.test(expression)) {
+    if (!/^[\d+\-*/.()e ]+$/.test(expression)) {
       throw new Error('Expresión no válida');
     }
 
@@ -29,6 +29,7 @@ export class CalculatorService {
     .replace(/(\d)(\()/g, '$1*(')
     .replace(/(\))(\d|\.)/g, '$1*$2')
     .replace(/(\.)(\()/g, '$1*$2')
+    .replace(/(\))(\()/g, '$1*$2')
   }
 
   processAndValidate(expression: string): string {
@@ -57,6 +58,10 @@ export class CalculatorService {
   saveToHistory(operation: string): void {
     const history = this.getHistory();
     history.push(operation);
+    this.updateHistory(history);
+  }
+
+  private updateHistory(history: string[]): void {
     this.storage.setItem(this.historyKey, JSON.stringify(history));
   }
 
@@ -67,6 +72,15 @@ export class CalculatorService {
 
   clearHistory(): void {
     this.storage.removeItem(this.historyKey);
+  }
+
+  setHistory(history: string[]): void {
+    this.storage.setItem(this.historyKey, JSON.stringify(history));
+  }
+
+  removeFromHistory(item: string): void {
+    const updatedHistory = this.getHistory().filter(historyItem => historyItem !== item);
+    this.updateHistory(updatedHistory);
   }
 
   setStorageEngine(storage: Storage): void {

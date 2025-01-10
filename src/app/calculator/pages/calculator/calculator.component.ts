@@ -15,7 +15,7 @@ export class CalculatorComponent {
   showHistory: boolean = false;
 
   constructor(private calculatorService: CalculatorService) {
-    this.loadHistory();
+    this.history = this.calculatorService.getHistory();
   }
 
   toggleHistory(): void {
@@ -27,26 +27,15 @@ export class CalculatorComponent {
     this.history = [];
   }
 
-  private loadHistory(): void {
-    this.history = this.calculatorService.getHistory();
-  }
-
   displayValue(value: string): void {
     if (this.isResult) {
-      if (isNaN(Number(this.result))) {
-        this.isResult = false;
-      } else {
-        this.display = this.result;
-        this.isResult = false;
-        if(!isNaN(Number(value))){
-          this.display = '';
-        }
-      }
+      this.display = !isNaN(Number(value)) ? '' : this.result;
+      this.isResult = false;
     }
-    if (this.isInvalidSequence(value)) {
-      return;
+
+    if (!this.isInvalidSequence(value)) {
+      this.updateDisplay(this.display + value);
     }
-    this.updateDisplay(this.display + value);
   }
 
   private isInvalidSequence(value: string): boolean {
@@ -80,7 +69,7 @@ export class CalculatorComponent {
   }
 
   deleteCharacter(): void {
-    this.updateDisplay(this.display.length > 1 ? this.display.slice(0, -1) : '');
+    this.display = this.display.length > 1 ? this.display.slice(0, -1) : '';
   }
 
   private removeZeros(expression: string): string {
@@ -103,43 +92,55 @@ export class CalculatorComponent {
 
   private updateResult(): void {
     const expression = this.removeZeros(this.display);
-    const calculationResult = this.calculatorService.calculateExpression(expression);
-    this.result = calculationResult.toString();
+    try {
+      if (!this.isLastCharacterOperator()) {
+        const calculationResult = this.calculatorService.calculateExpression(expression);
+        this.result = calculationResult.toString();
+      } else {
+        this.result = '';
+      }
+    } catch {
+      this.result = '';
+    }
   }
 
   private saveOperation(operation: string): void {
-    this.calculatorService.saveToHistory(operation);
-    this.history.push(operation);
+    this.calculatorService.saveToHistory(operation);  // Guardar en el servicio
+    this.history.push(operation);  // Actualizar en memoria del componente
   }
 
   selectHistoryItem(item: string): void {
     const [expression] = item.split(' = ');
     this.updateDisplay(expression);
     this.isResult = false;
+    this.showHistory = false
   }
 
   clearHistoryItem(item: string): void {
-    const index = this.history.indexOf(item);
-    if (index !== -1) {
-      this.history.splice(index, 1);
-    }
+    this.calculatorService.removeFromHistory(item);  // Eliminar del servicio
+    this.history = this.history.filter(operation => operation !== item);  // Eliminar de la memoria local del componente
   }
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent): void {
-    const validKeys = '0123456789+-*/.=()';
-    if (validKeys.includes(event.key)) {
-      if (event.key === '=') {
+    const { key } = event;
+
+    switch (key) {
+      case 'Enter':
+      case '=':
         this.finalResult();
-      } else {
-        this.displayValue(event.key);
-      }
-    } else if (event.key === 'Backspace') {
-      this.deleteCharacter();
-    } else if (event.key === 'Enter') {
-      this.finalResult();
-    } else if (event.key === 'Escape') {
-      this.clear();
+        break;
+      case 'Backspace':
+        this.deleteCharacter();
+        break;
+      case 'Escape':
+        this.clear();
+        break;
+      default:
+        if ('0123456789+-*/.()'.includes(key)) {
+          this.displayValue(key);
+        }
+        break;
     }
   }
 }
