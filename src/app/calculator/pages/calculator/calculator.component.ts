@@ -80,7 +80,7 @@ export class CalculatorComponent {
   }
 
   deleteCharacter(): void {
-    this.updateDisplay(this.display.length > 1 ? this.display.slice(0, -1) : '0');
+    this.updateDisplay(this.display.length > 1 ? this.display.slice(0, -1) : '');
   }
 
   private removeZeros(expression: string): string {

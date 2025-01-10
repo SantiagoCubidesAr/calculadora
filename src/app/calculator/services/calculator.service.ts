@@ -38,14 +38,13 @@ export class CalculatorService {
   }
 
   roundDecimals(value: number): number {
-    return parseFloat(value.toFixed(2));
+    return Math.abs(value) < 1e15 ? parseFloat(value.toFixed(2)) : value;
   }
 
   calculateExpression(expression: string): number {
     const processedExpression = this.processAndValidate(expression)
     try {
-      console.log(processedExpression);
-      const result = eval(processedExpression);
+      const result = Function(`"use strict"; return (${processedExpression})`)();
       if (!isFinite(result)) {
         throw new Error('Resultado infinito o no válido');
       }
