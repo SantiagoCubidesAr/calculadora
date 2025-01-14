@@ -22,6 +22,20 @@ export class CalculatorService {
     if (/[\+\-\*\/]$/.test(expression)) {
       throw new Error('La expresión no puede terminar con un operador');
     }
+
+    if (!this.areParenthesesBalanced(expression)) {
+      throw new Error('Faltan parentesis');
+    }
+  }
+
+  private areParenthesesBalanced(expression: string): boolean {
+    let balance = 0;
+    for (const char of expression) {
+      if (char === '(') balance++;
+      if (char === ')') balance--;
+      if (balance < 0) return false;
+    }
+    return balance === 0;
   }
 
   private addImplicitMultiplication(expression: string): string {
@@ -30,6 +44,7 @@ export class CalculatorService {
     .replace(/(\))(\d|\.)/g, '$1*$2')
     .replace(/(\.)(\()/g, '$1*$2')
     .replace(/(\))(\()/g, '$1*$2')
+    .replace(/(^|\D)\./g, '$10.')
   }
 
   processAndValidate(expression: string): string {

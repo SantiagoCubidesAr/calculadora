@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { CalculatorService } from '../../services/calculator.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-calculator',
@@ -29,7 +30,7 @@ export class CalculatorComponent {
 
   displayValue(value: string): void {
     if (this.isResult) {
-      this.display = !isNaN(Number(value)) ? '' : this.result;
+      this.display = !isNaN(Number(this.result)) || !''.includes(value) ? this.display : this.result;
       this.isResult = false;
     }
 
@@ -39,18 +40,19 @@ export class CalculatorComponent {
   }
 
   private isInvalidSequence(value: string): boolean {
-    if (value === '.') {
+    if (this.display.length === 0) {
+      return value !== '-' && !'0123456789.'.includes(value);
+    } else if (this.display.length === 1 && '-'.includes(this.display.charAt(0)) && '+/*'.includes(value)) {
+      return true;
+    } else if (value === '.') {
       const currentNumber = this.display.split(/[-+*/()]+/).pop();
       return currentNumber?.includes('.') ?? false;
-    }
-    if ((value === '*' || value === '/') && this.display.length === 0) {
+    } else if (['+', '-', '*', '/'].includes(value) && this.isLastCharacterOperator()) {
+      this.display = this.display.slice(0, -1) + value;
       return true;
+    } else {
+      return false;
     }
-    if (['+', '-', '*', '/'].includes(value) && this.isLastCharacterOperator()) {
-      this.display = this.display.slice(0, -1) + value; // Sustituye el operador actual.
-      return true;
-    }
-    return false;
   }
 
   private isLastCharacterOperator(): boolean {
@@ -70,6 +72,7 @@ export class CalculatorComponent {
 
   deleteCharacter(): void {
     this.display = this.display.length > 1 ? this.display.slice(0, -1) : '';
+    this.updateResult();
   }
 
   private removeZeros(expression: string): string {
@@ -105,20 +108,21 @@ export class CalculatorComponent {
   }
 
   private saveOperation(operation: string): void {
-    this.calculatorService.saveToHistory(operation);  // Guardar en el servicio
-    this.history.push(operation);  // Actualizar en memoria del componente
+    this.calculatorService.saveToHistory(operation);
+    this.clearHistoryItem(operation);
+    this.history.push(operation);
   }
 
   selectHistoryItem(item: string): void {
     const [expression] = item.split(' = ');
     this.updateDisplay(expression);
     this.isResult = false;
-    this.showHistory = false
+    this.showHistory = false;
   }
 
   clearHistoryItem(item: string): void {
-    this.calculatorService.removeFromHistory(item);  // Eliminar del servicio
-    this.history = this.history.filter(operation => operation !== item);  // Eliminar de la memoria local del componente
+    this.calculatorService.removeFromHistory(item);
+    this.history = this.history.filter(operation => operation !== item);
   }
 
   @HostListener('window:keydown', ['$event'])

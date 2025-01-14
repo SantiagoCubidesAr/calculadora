@@ -27,7 +27,7 @@ export class CalculatorHistoryComponent {
 
   Height(text: string): string {
 
-    const baseHeight = 25;
+    const baseHeight = 40;
     const maxLength = 30;
     const scaleFactor = 1;
 
